@@ -1,0 +1,74 @@
+body{
+    background-color: #2e4760;
+}
+
+.dashboard-body{
+    background-color: white;
+  height: 100vh;
+}
+
+.admin-login{
+    background-color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-block{
+    background-color: #2e4760;
+    color: white;
+    height: 40vh;
+    width: 40%;
+    border-radius: 10px;
+}
+
+.login-block h3{
+    padding-top: 5px;
+    text-align: center;
+}
+
+.input-block{
+    display: grid;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.top-part{
+    display: flex;
+  justify-content: end;
+}
+.logout{
+    
+    right: 0;
+    padding: 10px;
+}
+
+.dashboard-option-box{
+    border-radius: 5px;
+    padding: 10px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35%;
+    height: 100px;
+    background-color: #2e4760;
+    color: white;
+    font-size: 20px !important; 
+    font-weight: 500 !important;
+    gap: 5px;
+}
+
+.dashboard-option-box:hover{
+    background-color: black;
+    cursor: pointer;
+}
+
+
+
+.option-area{
+    margin-top: 30px;
+    height: 75vh;
+    align-content: center;
+}

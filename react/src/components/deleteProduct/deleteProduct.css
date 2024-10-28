@@ -1,0 +1,28 @@
+.pdt-delete-box{
+	border: 1px solid;
+  margin-top: 10px;
+  width: 80%;
+    overflow: hidden;
+  height: 100px;
+  padding: 5px;
+  background-color: black;
+}
+.pdt-delete-btn-col{
+    display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.pdt-delete-img{
+    height: 85px;
+    width: 70px;
+    object-fit: fill;
+    background-color: white;
+}
+
+.pdt-img{
+    width: 60px;
+    object-fit: contain;
+}

@@ -1,0 +1,96 @@
+
+
+.purchase-info {
+	background-color: white;
+	color: black;
+}
+
+.address-section{
+    background-color: white;
+    color: black;
+}
+
+.address-selected{
+    
+    background-color: white;
+    color: black;
+
+}
+
+.summary-section {
+	background-color: white;
+	height: 50vh;
+	position: sticky;
+	color: black;
+}
+
+.summary-header {
+	height: 50px;
+	padding: 10px;
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	color: gray;
+}
+.summary-body {
+	padding: 10px;
+	display: grid;
+	gap: 15px;
+}
+
+.info-header {
+	background-color: black;
+	height: 50px;
+	padding: 10px;
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	color: white;
+}
+.info-header-selected {
+	background-color: white;
+	height: 50px;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: black;
+}
+
+.info-header-selected span {
+	font-size: 40px;
+	color: green;
+}
+
+.info-body-selected {
+	height: 50px;
+	padding: 10px;
+	display: flex;
+}
+
+h3 {
+	font-weight: 600;
+	margin-bottom: 0px;
+}
+
+hr {
+	margin-top: 0;
+}
+
+.summary-item {
+	font-size: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.address-card {
+	margin: 0;
+	border-radius: 0;
+}
+
+
+
+
+  
+
+

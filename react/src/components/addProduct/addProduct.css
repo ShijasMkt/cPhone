@@ -1,0 +1,33 @@
+.add-product-home{
+    background-color: white;
+    color: black;
+    height: 100vh;
+}
+
+
+.add-product-body{
+    background-color: white;
+    color: #2e4760;
+}
+.add-product{
+    padding-top: 30px;
+    
+}
+
+.product-input label{
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.product-input input{
+    width: 90%;
+}
+
+.desc{
+    display: flex;
+    flex-direction: column;
+}
+
+.save{
+   width: 80px;
+}

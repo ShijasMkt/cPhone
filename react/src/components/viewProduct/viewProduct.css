@@ -1,0 +1,27 @@
+.pdt-item-box{
+	border: 1px solid;
+  margin-top: 5px;
+  width: 80%;
+    overflow: hidden;
+  height: 100px;
+  padding: 5px;
+  background-color: black;
+}
+
+.pdt-items{
+	display: grid;
+    justify-items: center;
+	margin-bottom: 10px;
+}
+
+.pdt-item-img{
+    height: 85px;
+    width: 70px;
+    object-fit: fill;
+    background-color: white;
+}
+
+.pdt-img{
+    width: 60px;
+    object-fit: contain;
+}
