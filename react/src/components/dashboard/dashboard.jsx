@@ -74,15 +74,19 @@ export default function Dashboard() {
 	};
 
   const optionSelected=(option)=>{
+	switch (option) {
+		case "add":
+			navigate("/addProduct")
+			break;
+		case "view":
+			navigate("/viewProduct")
+			break;
+		case "delete":
+			navigate("/deleteProduct")
+			break;
+		default:
+			break;
 	
-    if(option==="add"){
-      navigate("/addProduct")
-    }
-	else if(option==="view"){
-		navigate("/viewProduct")
-	}
-	else if(option==="delete"){
-		navigate("/deleteProduct")
 	}
 	
   }
@@ -170,12 +174,12 @@ export default function Dashboard() {
                 </span>
                 Delete Products
               </div>
-			  <div className="dashboard-option-box col-6" onClick={()=>optionSelected("edit")}>
+			  {/* <div className="dashboard-option-box col-6" onClick={()=>optionSelected("edit")}>
               <span className="material-symbols-outlined">
 			  edit
                 </span>
                 Edit Products
-              </div>
+              </div> */}
 			  </div>
 			  
             </div>

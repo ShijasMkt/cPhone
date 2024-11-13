@@ -17,3 +17,8 @@ class AddressDataSerializer(serializers.ModelSerializer):
     class Meta:
         model=Address
         fields='__all__'
+
+class UserDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=user
+        fields='__all__'        

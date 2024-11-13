@@ -16,5 +16,12 @@ urlpatterns = [
     path('delete_product/',deleteProduct),
     path('reset_email/',resetEmail),
     path('check_user/',checkUser),
-    path('reset_pass/',resetPass)
+    path('reset_pass/',resetPass),
+    path('add_wishlist/',addToWishlist),
+    path('show_wishlist/',showWishlist),
+    path('delete_wishlist_item/',deleteWishlistItem),
+    path('user_details/',userDetails),
+    path('user_details_update/',editUserDetails),
+    path('delete_account/',deleteUserAccount)
+
 ]

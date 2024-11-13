@@ -19,6 +19,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.2",
+    "react-image-crop": "^11.0.7",
     "react-otp-input": "^3.1.1",
     "react-password-checklist": "^1.8.0",
     "react-spinners": "^0.14.1",

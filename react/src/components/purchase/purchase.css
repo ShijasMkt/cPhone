@@ -1,31 +1,23 @@
-body{
-    background-color: #2e4760 !important;
-    color: white;
-}
+
 
 .purchase-body{
-    background-color: #2e4760 !important;
-    height: auto;
-    padding: 35px 15px 15px 15px;
+    background-color: #6E6E6E !important;
+    min-height: 100vh;
+    color: white;
+    
 }
 .phone-img{
-    border-radius: 60px;
-    width: 250px;
-    object-fit: contain;
+    width: 330px;
 }
 .img-box{
     border: 3px dotted white;
-    margin-top: 30px;
-    border-radius: 60px;
-    height: 70vh;
+    border-radius: 16px;
     display: flex;
     justify-content: center;
     background-color: white;
+    padding-block: 20px;
 }
-.name-box{
-    margin-top: 30px;
-    margin-left: 30px;
-}
+
 .price-box{
     margin-top: 10px;
 }
@@ -35,12 +27,9 @@ body{
 }
 
 .purchase-view{
-    margin-top: 30px;
     border: 1px solid white;
-    border-radius: 30px;
-    
-    height: 70vh;
-    position: relative;
+    border-radius: 16px;
+    padding: 20px;
 }
 .gift-check{
     padding-left: 5px;
@@ -63,23 +52,11 @@ body{
     color: white;
     font-weight: 500;
 }
-.button-section{
-    padding: 10px;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
+
 h1{
     font-weight: 700 ;
 }
 
-.delivery-date{
-    padding: 10px;
-}
 .bank-offers{
     font-size: 12px;
-}
-.purchase-view-body{
-    padding-right: 5px;
-    padding-top: 10px;
 }

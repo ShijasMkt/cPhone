@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import swal from "sweetalert2";
 import { isValidEmail, getLastInvalidText } from 'email-validator-dns-provider-rules';
 import PasswordChecklist from "react-password-checklist";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp({ changePage }) {
+	const navigateTo=useNavigate();
 	const [icon, setIcon] = useState("visibility");
 	const [type, setType] = useState("password");
 	const [isStrong, setStrong] = useState(false);
@@ -69,7 +71,7 @@ export default function SignUp({ changePage }) {
 								text: "You are successfully Registered",
 							})
 							.then((res) => {
-								window.location = "/";
+								navigateTo("/")
 							});
 					}else if(res.status==403){
 						swal.fire({
@@ -78,7 +80,7 @@ export default function SignUp({ changePage }) {
 							text:"User with given email exists"
 						})
 						.then((res)=>{
-							window.location = "/";
+							navigateTo("/login")
 						})
 
 					}		
@@ -90,7 +92,7 @@ export default function SignUp({ changePage }) {
 								text: "Cant Register now",
 							})
 							.then((res) => {
-								window.location = "/";
+								navigateTo("/login")
 							});
 					}
 				} else {
@@ -197,7 +199,7 @@ export default function SignUp({ changePage }) {
 							</button>
 							<div className="link">
 								Have an account?{" "}
-								<span data-value="Login" onClick={changePage}>
+								<span data-value="Login" className="fw-bold" onClick={changePage}>
 									Login In
 								</span>
 							</div>

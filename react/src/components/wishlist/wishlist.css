@@ -1,0 +1,31 @@
+.wishlist-out {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.wish-num {
+    font-size: 0.8rem;
+    color: white;
+    margin-left: 0.3rem;
+}
+
+.wishlist-panel .wishlist-items {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.wishlist-box {
+    padding: 0.5rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.remove-icon {
+    cursor: pointer;
+    color: #f44336;
+}
+
+/* .wishlist-panel{
+    position:fixed !important;
+} */

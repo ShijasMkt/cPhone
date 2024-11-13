@@ -34,9 +34,6 @@ export default function AddProduct() {
         data.append('price',formData.price)
         data.append('desc',formData.desc)
         data.append('img',formData.img)
-
-        
-
         try{
           const res = await fetch("http://127.0.0.1:8000/add_product/", {
             method: "POST",

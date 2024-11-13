@@ -1,19 +1,16 @@
 import React from 'react'
 import "./logout.css";
 import Cookies from 'js-cookie';
+import { useUser } from '../authentication/userContext';
 
 export default function Logout() {
-    const logoutFunc = () => {
-		if (Cookies.get("userKey")) {
-			Cookies.remove("userKey");
-            Cookies.remove('userID');
-            Cookies.remove('userName');
-			window.location = "/";
-		}
-	};
+  const{logoutFunc}=useUser();
+  const handleClick=()=>{
+    logoutFunc()
+  }
   return (
     <div>
-        <button className="logout-button" onClick={logoutFunc}>
+        <button className="logout-button" onClick={handleClick}>
             Logout
         </button>
     </div>

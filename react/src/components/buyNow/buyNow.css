@@ -1,36 +1,33 @@
-
+.buyNow-body {
+	background-color: #6E6E6E;
+	min-height: 100vh;
+}
 
 .purchase-info {
 	background-color: white;
 	color: black;
 }
 
-.address-section{
-    background-color: white;
-    color: black;
+.address-section {
+	background-color: white;
+	color: black;
 }
 
-.address-selected{
-    
-    background-color: white;
-    color: black;
-
+.address-selected {
+	background-color: white;
+	color: black;
 }
 
 .summary-section {
 	background-color: white;
-	height: 50vh;
 	position: sticky;
 	color: black;
 }
 
 .summary-header {
-	height: 50px;
 	padding: 10px;
-	display: flex;
-	justify-content: start;
-	align-items: center;
-	color: gray;
+	background: #000;
+	color: #fff;
 }
 .summary-body {
 	padding: 10px;
@@ -40,21 +37,16 @@
 
 .info-header {
 	background-color: black;
-	height: 50px;
 	padding: 10px;
-	display: flex;
-	justify-content: start;
-	align-items: center;
 	color: white;
 }
 .info-header-selected {
 	background-color: white;
-	height: 50px;
 	padding: 10px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 	color: black;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .info-header-selected span {
@@ -88,9 +80,25 @@ hr {
 	border-radius: 0;
 }
 
+.info-body .address-box{
+	padding: 10px;
+	border-bottom: 1px dashed black;
+}
+.info-body .row{
+	align-items: center;
+}
 
+.info-body .card-span {
+	background-color: #e6e6e6;
+	padding: 5px 10px;
+	width: fit-content;
+	font-size: 13px;
+	border-radius: 5px;
+	color: gray;
+}
 
-
-  
-
+.address-details {
+	display: flex;
+	flex-direction: column;
+}
 

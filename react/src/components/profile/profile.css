@@ -1,0 +1,44 @@
+.profile-body{
+    background-color: #6E6E6E;
+    min-height: 100vh ;
+}
+
+.profile-details{
+    background-color: white;
+    padding: 10px; 
+    border-radius: 5px;
+}
+
+.profile-headings{
+    display: flex;
+    gap: 20px;
+    align-items: baseline;
+}
+
+.profile-headings span{
+    color: #0d6efd;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.profile-section{
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+.CropperWrapper{
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.userImg{
+    border-radius: 50%; /* Make the image circular */
+    width: 60px; /* Adjust the size */
+    height: 60px; /* Adjust the size */
+    object-fit: cover;
+}
+
+.delete-acc{
+    color: crimson;
+    cursor: pointer;
+}

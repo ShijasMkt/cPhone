@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import "/src/assets/css/main.css";
+import React, { useState } from "react";
+import "./home.css";
 import Login from "../login/login";
 import SignUp from "../signup/signup";
 
-export default function Home() {
-  
+export default function Home({ onClose }) {
   const [page, setPage] = useState("Login");
 
   const changePage = (event) => {
@@ -16,30 +15,22 @@ export default function Home() {
     }
   };
 
-  
-
   return (
-    <div className="main-container">
-      <div className="container-left ">
-        <img src="src\assets\pic2.jpg" alt="Error" />
-      </div>
-      <div className="container-right">
-        <div className="comp-logo">
-          <img src="src\assets\icon-blue.png" alt="Error" width={35}/>
-          <span>cPhone</span>
-        </div>
+      <div className="modal-body">
         <div className="form-part">
-          {page == "Login" ? (
-             <>
-              <Login changePage={changePage}/>
+          {page === "Login" ? (
+            <>
+              <Login changePage={changePage} />
             </>
           ) : (
             <>
-              <SignUp changePage={changePage}/>
+              <SignUp changePage={changePage} />
             </>
           )}
+    
         </div>
+        
       </div>
-    </div>
+    
   );
 }

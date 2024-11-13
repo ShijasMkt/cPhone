@@ -5,6 +5,7 @@ class user(models.Model):
     name=models.CharField(max_length=30)
     email=models.CharField(max_length=30)
     password=models.CharField(max_length=30)
+    user_img=models.ImageField(upload_to='upload/users',blank=True,null=True)
 
 class Phones(models.Model):
     name=models.CharField(max_length=30)
@@ -30,3 +31,7 @@ class Address(models.Model):
     pincode=models.IntegerField()
     address=models.CharField(max_length=200)
     type=models.CharField(max_length=10)
+
+class WishList(models.Model):
+    user_id=models.ForeignKey(user,on_delete=models.CASCADE)
+    item=models.ForeignKey(Phones,on_delete=models.CASCADE) 

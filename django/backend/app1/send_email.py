@@ -2,8 +2,6 @@ import smtplib
 import environ
 from email.mime.text import MIMEText
 
-env = environ.Env()
-env.read_env()
 
 def send_email(to,otp):
     subject = "Reset Password"
@@ -18,8 +16,8 @@ def send_email(to,otp):
     Thank you,
     cPhone
     """
-    sender = env('EMAIL')
-    password = env("EMAIL_PASS")
+    sender = "shijumkt@gmail.com"
+    password = "xpoi zryw ktot dozm"
     recipients = [sender, to]
     msg = MIMEText(body)
     msg['Subject'] = subject

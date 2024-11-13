@@ -267,5 +267,82 @@ def resetPass(request):
         selected_user.save()
         return Response(status=status.HTTP_200_OK)
 
+@api_view(['POST'])    
+@permission_classes([AllowAny])
+def addToWishlist(request):
+    if request.method=='POST':
+        data=request.data
+        user_id=data.get('userID')
+        item_id=data.get('itemID')
+        item=WishList.objects.filter(user_id_id=user_id,item_id=item_id)
+        if(item):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            wish_item=WishList(user_id_id=user_id,item_id=item_id)
+            wish_item.save()
+            return Response(status=status.HTTP_200_OK)    
 
+@api_view(['POST'])    
+@permission_classes([AllowAny])
+def showWishlist(request):
+    if request.method=='POST':
+        data=request.data
+        user_id=data.get('userID')
+        wish_items = WishList.objects.filter(user_id=user_id)
+        products = [wish_item.item for wish_item in wish_items]
+    
+        serializer = PhoneDataSerializer(products, many=True)
+        return Response(data={'products': serializer.data},status=status.HTTP_200_OK)
+      
+@api_view(['POST'])    
+@permission_classes([AllowAny])
+def deleteWishlistItem(request):
+    if request.method=='POST':
+        data=request.data
+        user_id=data.get('userID')
+        item_id=data.get('itemID')
+        wish_item=WishList.objects.filter(user_id=user_id,item_id=item_id).first()
+        wish_item.delete()
+        return(Response(status=status.HTTP_200_OK))   
+
+@api_view(['POST'])    
+@permission_classes([AllowAny])
+def userDetails(request):
+    if request.method=='POST':
+        data=request.data
+        user_id=data.get('userID')
+        user_data=user.objects.get(id=user_id)
         
+        serializer=UserDataSerializer(user_data)
+        return(Response(data={'userData':serializer.data},status=status.HTTP_200_OK))     
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def editUserDetails(request):
+    if request.method == 'POST':
+        data = request.data
+        user_id = data.get('userID')
+        option_selected = data.get('option')
+        user_instance = user.objects.filter(id=user_id).first()
+        if option_selected == 'name':
+            user_name = data.get('name')
+            user_instance.name = user_name
+            user_instance.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            img = request.FILES.get('user_img')
+            if img:
+                user_instance.user_img = img
+                user_instance.save()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Image not provided"}, status=status.HTTP_400_BAD_REQUEST)
+                                 
+@api_view(['POST'])    
+@permission_classes([AllowAny])
+def deleteUserAccount(request):
+    if request.method=='POST':
+        data=request.data
+        user_id=data.get('userID')
+        user_data=user.objects.get(id=user_id)
+        user_data.delete()
+        return(Response(status=status.HTTP_200_OK))
