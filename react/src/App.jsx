@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import Home from "./components/home/home";
 import { BrowserRouter as Router, Route, Routes, Navigate, Link } from "react-router-dom";
+import 'primereact/resources/primereact.min.css';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primeicons/primeicons.css';
 import Forgot from "./components/forgot/forgot";
 import Inside from "./components/inside/inside";
 import Cookies from 'js-cookie';
@@ -17,6 +20,9 @@ import Profile from "./components/profile/profile";
 import { UserProvider } from "./components/authentication/userContext";
 import AuthPage from "./components/authPage/authPage";
 import { WishlistProvider } from "./components/wishlist/wishlistContext";
+import OrderView from "./components/orders/OrderView";
+
+
 
 
 function App() {
@@ -57,6 +63,7 @@ function App() {
         <Route path="/purchase" element={<Purchase/>}/>
         <Route path="/address" element={(logged?<Address/>:<AuthPageWithPopup/>)}/>
         <Route path="/orders" element={(logged?<Orders/>:<AuthPageWithPopup/>)}/>
+        <Route path="/orderView" element={(logged?<OrderView/>:<AuthPageWithPopup/>)}/>
         <Route path="/buyNow" element={(logged?<BuyNow/>:<AuthPageWithPopup/>)}/>
         <Route path="/profile" element={(logged?<Profile/>:<AuthPageWithPopup/>)}/>
         <Route path="/dashboard" element={<Dashboard/>}/>

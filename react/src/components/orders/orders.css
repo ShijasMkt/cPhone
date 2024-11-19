@@ -1,0 +1,62 @@
+.orders-body{
+    background-color: #9DC7C5;
+    min-height: 100vh;
+}
+
+
+.search-bar {
+    border-radius: 5px 0px 0px 5px;
+    border: 1px solid gray;
+    padding: 5px;
+    width: 86%;
+  }
+.search-bar:focus{
+    border-color: #2e4760 !important;
+}
+
+.search-btn {
+	background-color: #2e4760;
+	border: none;
+	color: white;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	padding: 8px;
+	border-radius: 0px 5px 5px 0px;
+}
+.order-details-section{
+    margin-top: 20px;
+}
+
+.order-item-box{
+    border: 1px solid grey;
+    background-color: white;
+    padding: 5px;
+    width: 86%;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.delivery-status{
+    display: flex;
+    flex-direction: column;
+}
+
+.delivery-status span{
+    color: gray;
+    font-size: 14px;
+}
+
+.order-item-name{
+    display: flex;
+    flex-direction: column;
+}
+
+.order-item-name span{
+    color: grey;
+    font-size: 14px;
+}
+
+.order-item-box:hover{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

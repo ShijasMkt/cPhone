@@ -22,6 +22,8 @@ urlpatterns = [
     path('delete_wishlist_item/',deleteWishlistItem),
     path('user_details/',userDetails),
     path('user_details_update/',editUserDetails),
-    path('delete_account/',deleteUserAccount)
+    path('delete_account/',deleteUserAccount),
+    path('place_order/',placeOrder),
+    path('fetch_orders/',fetchOrders),
 
 ]

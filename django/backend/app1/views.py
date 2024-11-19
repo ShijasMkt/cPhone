@@ -4,15 +4,15 @@ from app1.models import user
 from app1.models import Phones
 from app1.models import Cart
 from app1.models import Address
-from .send_email import send_email
-from .otp import generate_otp
+from .tools.send_email import send_email
+from .tools.otp import generate_otp
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 import string
 import random
-from .serializers import *
+from .tools.serializers import *
 from django.contrib.auth.hashers import make_password,check_password
 
 
@@ -346,3 +346,62 @@ def deleteUserAccount(request):
         user_data=user.objects.get(id=user_id)
         user_data.delete()
         return(Response(status=status.HTTP_200_OK))
+    
+
+@api_view(['POST'])    
+@permission_classes([AllowAny])
+def placeOrder(request):
+    if request.method=='POST':
+            data=request.data
+            userID=data.get('userID')
+            itemID=data.get("itemID")
+            date=data.get("date")
+            total_price=data.get("totalPrice")
+            qty=data.get("qty")
+            addressID=data.get("addressID")
+            paymentMode=data.get("paymentMode")
+            paymentID=data.get("paymentID")
+
+            if paymentMode=="cod":
+                new_order=Orders(
+                    user_id_id=userID,
+                    item_id=itemID,
+                    date=date,
+                    total_price=total_price,
+                    qty=qty,
+                    address_id=addressID,
+                    payment_mode=paymentMode,
+                )
+
+                new_order.save()
+        
+            return(Response(status=status.HTTP_200_OK))    
+
+
+@api_view(['POST'])    
+@permission_classes([AllowAny])
+def fetchOrders(request):
+    if request.method=='POST':
+        data=request.data
+        userID=data.get('userID')
+        
+        order_details = Orders.objects.select_related('address', 'item').filter(user_id_id=userID)
+        all_orders = []
+                
+        if not order_details:
+                return Response({"error": "No order found for the given user."}, status=status.HTTP_404_NOT_FOUND)
+        for order in order_details:
+            address_serializer = AddressDataSerializer(order.address)
+            item_serializer = PhoneDataSerializer(order.item)
+
+            response_data = {
+            "date": order.date,
+            "qty": order.qty,
+            "price": order.total_price,
+            "address": address_serializer.data,
+            "item": item_serializer.data,
+            "orderID":order.id,
+            }
+            all_orders.append(response_data)
+
+        return Response(all_orders, status=status.HTTP_200_OK)

@@ -35,3 +35,13 @@ class Address(models.Model):
 class WishList(models.Model):
     user_id=models.ForeignKey(user,on_delete=models.CASCADE)
     item=models.ForeignKey(Phones,on_delete=models.CASCADE) 
+
+class Orders(models.Model):
+    user_id=models.ForeignKey(user,on_delete=models.CASCADE)
+    item=models.ForeignKey(Phones,on_delete=models.CASCADE)
+    date=models.DateField()
+    total_price=models.FloatField()  
+    qty=models.IntegerField() 
+    address=models.ForeignKey(Address,on_delete=models.CASCADE,blank=True,null=True) 
+    payment_mode=models.CharField(max_length=20,blank=True,null=True)
+    payment_id=models.IntegerField(blank=True,null=True)

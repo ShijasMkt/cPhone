@@ -1,9 +1,9 @@
 
 
 .purchase-body{
-    background-color: #6E6E6E !important;
+    background-color: #9DC7C5 !important;
     min-height: 100vh;
-    color: white;
+    color: black;
     
 }
 .phone-img{
@@ -34,7 +34,7 @@
 .gift-check{
     padding-left: 5px;
     padding-top: 5px;
-    color: white;
+    color: black;
     display: flex;
     gap:5px;
     
@@ -59,4 +59,5 @@ h1{
 
 .bank-offers{
     font-size: 12px;
+    color: black;
 }

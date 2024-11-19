@@ -74,7 +74,7 @@ export default function Inside() {
 	};
 
 	const toggleWishlist = (phoneID) => {
-		const isInWishlist = wishlistItems.some(item => item.id === phoneID);  // Check if the item is in the wishlist
+		const isInWishlist = wishlistItems.some(item => item.id === phoneID);  
 		if (isInWishlist) {
 		  deleteWishlistItem(phoneID);
 		} else {

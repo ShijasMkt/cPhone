@@ -6,8 +6,10 @@ import "./address.css";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function Address() {
+	const navigateTo=useNavigate();
 	const userID = Cookies.get("userID");
 	const [isFormVisible, setIsFormVisible] = useState(false);
 	const [formData, setFormData] = useState({
@@ -21,28 +23,35 @@ export default function Address() {
 	const { fName, lName, mobile, pincode, address, type } = formData;
 	const [addressList, setAddressList] = useState([]);
 	const [refresh, setRefresh] = useState(false);
-	useEffect(() => {
-		const showAddress = async () => {
-			const body = JSON.stringify({ userID });
-			const res = await fetch("http://127.0.0.1:8000/show_address/", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body,
-			});
-			if (!res.ok) {
-				swal.fire({
-					icon: "error",
-					title: "Network Error",
-					text: "Please come back again",
-				});
-			}
-			const data = await res.json();
-			setAddressList(data);
-		};
+	useEffect(()=>{
 		showAddress();
-	}, [refresh, userID]);
+	},[])
+	useEffect(() => {
+		if(refresh){
+			showAddress();
+		}
+		
+	}, [refresh]);
+
+	const showAddress = async () => {
+		const body = JSON.stringify({ userID });
+		const res = await fetch("http://127.0.0.1:8000/show_address/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body,
+		});
+		if (!res.ok) {
+			swal.fire({
+				icon: "error",
+				title: "Network Error",
+				text: "Please come back again",
+			});
+		}
+		const data = await res.json();
+		setAddressList(data);
+	};
 
 	const handleChange = (e) => {
 		const { id, value } = e.target;
@@ -59,7 +68,8 @@ export default function Address() {
 	};
 
 	const saveAddress = async () => {
-		if (!fName=="" || !lName=="" || !mobile=="" || !pincode=="" || !address=="") {
+		setRefresh(!refresh)
+		if (fName=="" || lName=="" || mobile==null || pincode==null || address=="") {
 			alert("Please fill all fields");
 		} else {
 			const body = JSON.stringify({ formData, userID });
@@ -79,13 +89,15 @@ export default function Address() {
 						text: "Address saved successfully",
 					})
 					.then((res) => {
-						window.location = "/address";
+						navigateTo("/address");
+						setRefresh(true)
 					});
 			}
 		}
 	};
 
 	const deleteAddress = async (addressID) => {
+		setRefresh(!refresh)
 		const body = JSON.stringify({ userID, addressID });
 		const res = await fetch("http://127.0.0.1:8000/delete_address/", {
 			method: "POST",
@@ -102,7 +114,7 @@ export default function Address() {
 					text: "Address deleted successfully",
 				})
 				.then(() => {
-					setRefresh(!refresh); // Toggle refresh state to trigger useEffect
+					setRefresh(true); // Toggle refresh state to trigger useEffect
 				});
 		}
 	};

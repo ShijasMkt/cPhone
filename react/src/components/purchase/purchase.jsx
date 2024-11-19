@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useLocation } from "react-router-dom";
 import SecNav from "../secNav/secNav";
-import BuyNow from "../buyNow/buyNow";
 import { useNavigate } from "react-router-dom";
 
 export default function Purchase() {

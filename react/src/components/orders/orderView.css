@@ -1,0 +1,48 @@
+.order-view-body{
+    background-color: #9DC7C5;
+    min-height: 100vh;
+}
+
+.delivery-section{
+    background-color: white;
+  padding: 10px;
+    padding-top: 5px;
+  
+}
+
+.delivery-section span{
+    color: grey;
+    font-size: 14px;
+}
+
+.item-section{
+    background-color: white;
+}
+
+.delivery-address {
+    line-height: 30px;
+  }
+.order-delivery-status{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 14px;
+}
+ 
+.order-delivery-status span{
+    font-size: 16px;
+}
+
+.download-btn{
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    padding: 5px;
+    font-size: 14px;
+    color: blue;
+}
+
+.delivery-status-elements{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

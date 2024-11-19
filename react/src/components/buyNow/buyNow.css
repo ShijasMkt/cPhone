@@ -1,5 +1,5 @@
 .buyNow-body {
-	background-color: #6E6E6E;
+	background-color: #9DC7C5;
 	min-height: 100vh;
 }
 
@@ -8,12 +8,12 @@
 	color: black;
 }
 
-.address-section {
+.info-section {
 	background-color: white;
 	color: black;
 }
 
-.address-selected {
+.info-selected {
 	background-color: white;
 	color: black;
 }
@@ -102,3 +102,66 @@ hr {
 	flex-direction: column;
 }
 
+
+.item-box{
+	padding: 5px;
+	margin-bottom: 5px;
+}
+
+.item-info{
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+}
+
+
+.item-info h5{
+	font-weight: 400;
+	margin-bottom: 0px;
+}
+.button-box{
+	padding: 10px;
+	display: flex;
+	justify-content: end;
+	box-shadow: gray 0px 0px 10px;
+}
+.continue-btn{
+	background-color: #fb641b;
+	border: 0px;
+	padding: 10px;
+	color: white;
+	font-weight: 500;
+	width: 25%;
+}
+
+.text-theme-2{
+	color: grey;
+  font-size: 14px;
+}
+
+.list-group{
+	border-radius: 0px;
+}
+
+.cod-box{
+	padding: 10px;
+	background-color:#dfdfdf ;
+}
+
+#canv{
+	border: 1px solid blue;
+}
+
+.buyNow-btn{
+	background-color: #fb641b;
+	border: 0px;
+	padding: 10px;
+	color: white;
+	font-weight: 500;
+	width: 100%;
+}
+
+.upi-box{
+	padding: 10px;
+	background-color:#dfdfdf ;
+}

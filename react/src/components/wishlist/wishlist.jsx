@@ -2,10 +2,16 @@ import React, { useRef } from "react";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { useWishlist } from "../wishlist/wishlistContext";
 import "./wishlist.css"; 
+import { useNavigate } from "react-router-dom";
 
 export default function Wishlist() {
+    const navigateTo=useNavigate();
     const op = useRef(null);
     const { wishlistItems, deleteWishlistItem } = useWishlist();
+
+    const toViewPage = (phone) => {
+		navigateTo("/purchase", { state: { data: phone } });
+	};
 
     const showWishlist = (e) => {
         op.current.toggle(e);
@@ -29,7 +35,7 @@ export default function Wishlist() {
                             <div className="wishlist-box" key={item.id}>
                                 <div className="wish-item">
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <div className="d-flex gap-2 align-items-center">
+                                        <div className="d-flex gap-2 align-items-center" onClick={() => toViewPage(item)}>
                                             <img
                                                 src={`http://127.0.0.1:8000${item.img}`}
                                                 alt=""
