@@ -3,7 +3,7 @@ import "./addProduct.css";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-export default function AddProduct() {
+export default function AddProduct({onClose}) {
   const navigate=useNavigate()
     const [formData, setFormData] = useState({
         name: '',
@@ -47,7 +47,7 @@ export default function AddProduct() {
               text: "you've successfully added a product",
             })
             .then(
-              navigate('/dashboard')
+              onClose()
             )
           }
           else{
@@ -57,7 +57,7 @@ export default function AddProduct() {
               text: "There was a error adding product",
             }) 
             .then(
-              navigate("/dashboard")
+              onClose()
             )
           }
 			
@@ -74,14 +74,9 @@ export default function AddProduct() {
 
   return (
     <>
-      <div className="add-product-home">
-        <div className='add-product-body'>
-        
-        <div className='add-product'>
-          <div className="container">
-        <h3>Add Products</h3>
-        <hr />
+      
           <div className='product-input'>
+            <div className='container'>
             <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-4">
@@ -107,14 +102,9 @@ export default function AddProduct() {
               </div>
               
             </form>
+            </div>
           </div>
-          </div>
-        </div>
-          
-        </div>
         
-      
-      </div>
     </>
   )
 }

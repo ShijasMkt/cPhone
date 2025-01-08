@@ -89,13 +89,10 @@ export default function Cart() {
 		cartItems.forEach((element) => {
 			itemQty = itemQty + element.qty;
 		});
-		const cartData = {
-			count: itemQty,
-			price: totalPrice,
-		};
+		
 
 		if (cartCount > 0) {
-			navigateTo('/buyNow', { state: { data: cartData } });
+			navigateTo('/buyNow', { state: { data: cartItems ,fromCart:true} });
 		} 
         else {
 			swal
@@ -121,8 +118,9 @@ export default function Cart() {
 					{cartItems.length > 0 ? (
 						<>
 							{cartItems.map((list) => (
-								<div className="cart-item-box " key={list.id}>
-									<div className="row align-items-center">
+								<div className="row cart-item-box" key={list.id}>
+								
+									
 										<div className="col-3">
 											<img
 												src={`http://127.0.0.1:8000${list.img}`}
@@ -154,7 +152,7 @@ export default function Cart() {
 												</span>
 											</button>
 										</div>
-									</div>
+									
 								</div>
 							))}
 						</>

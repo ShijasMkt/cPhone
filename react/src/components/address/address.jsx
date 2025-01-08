@@ -1,37 +1,38 @@
 import React, { useEffect } from "react";
-import { Sidebar } from "primereact/sidebar";
-import Logout from "../logout/logout";
 import SecNav from "../secNav/secNav";
 import "./address.css";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../footer/footer";
+import { Dialog } from 'primereact/dialog';
+        
 
 export default function Address() {
 	const navigateTo=useNavigate();
 	const userID = Cookies.get("userID");
 	const [isFormVisible, setIsFormVisible] = useState(false);
 	const [formData, setFormData] = useState({
-		fName: "",
-		lName: "",
+		fname: "",
+		lname: "",
 		mobile: "",
 		pincode: "",
 		address: "",
 		type: "Home",
 	});
-	const { fName, lName, mobile, pincode, address, type } = formData;
+	const { fname, lname, mobile, pincode, address, type } = formData;
 	const [addressList, setAddressList] = useState([]);
+	const [selectedAddress,setSelectedAddress]=useState({});
 	const [refresh, setRefresh] = useState(false);
+	const[editVisible,setEditVisible]=useState(false);
 	useEffect(()=>{
 		showAddress();
 	},[])
 	useEffect(() => {
-		if(refresh){
-			showAddress();
-		}
-		
-	}, [refresh]);
+		showAddress();
+	
+	}, [isFormVisible]);
 
 	const showAddress = async () => {
 		const body = JSON.stringify({ userID });
@@ -60,6 +61,7 @@ export default function Address() {
 			[id]: value,
 		}));
 	};
+
 	const handleRadioChange = (e) => {
 		setFormData((prevState) => ({
 			...prevState,
@@ -68,8 +70,7 @@ export default function Address() {
 	};
 
 	const saveAddress = async () => {
-		setRefresh(!refresh)
-		if (fName=="" || lName=="" || mobile==null || pincode==null || address=="") {
+		if (fname=="" || lname=="" || mobile==null || pincode==null || address=="") {
 			alert("Please fill all fields");
 		} else {
 			const body = JSON.stringify({ formData, userID });
@@ -80,6 +81,7 @@ export default function Address() {
 				},
 				body,
 			});
+			setRefresh(true)
 
 			if (res.status == 200) {
 				swal
@@ -88,16 +90,38 @@ export default function Address() {
 						title: "Saved",
 						text: "Address saved successfully",
 					})
-					.then((res) => {
-						navigateTo("/address");
-						setRefresh(true)
-					});
+					showAddress();
 			}
 		}
 	};
 
+	const editAddress=async()=>{
+		if (fname=="" || lname=="" || mobile==null || pincode==null || address=="") {
+			alert("Please fill all fields");
+		} else {
+			const body = JSON.stringify({ formData});
+			const res = await fetch("http://127.0.0.1:8000/edit_address/", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body,
+			});
+			if(res.ok)
+			{
+				setFormData({fname: "",
+					lname: "",
+					mobile: "",
+					pincode: "",
+					address: "",
+					type: "Home",})
+				showAddress()
+				setEditVisible(false)
+			}
+		}
+	}
+
 	const deleteAddress = async (addressID) => {
-		setRefresh(!refresh)
 		const body = JSON.stringify({ userID, addressID });
 		const res = await fetch("http://127.0.0.1:8000/delete_address/", {
 			method: "POST",
@@ -113,9 +137,7 @@ export default function Address() {
 					title: "Successfull",
 					text: "Address deleted successfully",
 				})
-				.then(() => {
-					setRefresh(true); // Toggle refresh state to trigger useEffect
-				});
+				showAddress()
 		}
 	};
 	return (
@@ -144,12 +166,12 @@ export default function Address() {
 											<input
 												type="text"
 												className="form-control"
-												id="fName"
+												id="fname"
 												placeholder=""
-												value={fName}
+												value={fname}
 												onChange={handleChange}
 											/>
-											<label htmlFor="fName" className="mt-0">
+											<label htmlFor="fname" className="mt-0">
 												First Name
 											</label>
 										</div>
@@ -159,12 +181,12 @@ export default function Address() {
 											<input
 												type="text"
 												className="form-control"
-												id="lName"
+												id="lname"
 												placeholder=""
-												value={lName}
+												value={lname}
 												onChange={handleChange}
 											/>
-											<label htmlFor="lName" className="mt-0">
+											<label htmlFor="lname" className="mt-0">
 												Last Name
 											</label>
 										</div>
@@ -280,6 +302,136 @@ export default function Address() {
 												</div>
 											</div>
 											<div className="col-2 card-button">
+												<button type="button" className="btn btn-light btn-sm" onClick={()=>{setEditVisible(true);setFormData(list);}}>
+													<span className="material-symbols-outlined check" >edit</span>
+												</button>
+												<Dialog  header="Edit" visible={editVisible}  onHide={() => setEditVisible(false)}>
+													<form action="">
+														<div className="row">
+															<div className="col-4">
+																<div className="form-floating mb-3">
+																	<input
+																		type="text"
+																		className="form-control"
+																		id="fname"
+																		placeholder=""
+																		value={formData.fname}
+																		onChange={handleChange}
+																	/>
+																	<label htmlFor="fname" className="mt-0">
+																		First Name
+																	</label>
+																</div>
+															</div>
+															<div className="col-4">
+																<div className="form-floating mb-3">
+																	<input
+																		type="text"
+																		className="form-control"
+																		id="lname"
+																		placeholder=""
+																		value={formData.lname}
+																		onChange={handleChange}
+																	/>
+																	<label htmlFor="lname" className="mt-0">
+																		Last Name
+																	</label>
+																</div>
+															</div>
+															<div className="col-4">
+																<div className="form-floating mb-3">
+																	<input
+																		type="text"
+																		className="form-control"
+																		id="mobile"
+																		placeholder=""
+																		value={formData.mobile}
+																		onChange={handleChange}
+																		maxLength={10}
+												
+																	/>
+																	<label htmlFor="mobile" className="mt-0">
+																		10-Digit mobile number
+																	</label>
+																</div>
+															</div>
+														</div>
+														<div className="row">
+															<div className="col-4">
+																<div className="form-floating mb-3">
+																	<input
+																		type="text"
+																		className="form-control"
+																		id="pincode"
+																		placeholder=""
+																		value={formData.pincode}
+																		onChange={handleChange}
+																		maxLength={6}
+																	/>
+																	<label htmlFor="pincode" className="mt-0">
+																		Pincode
+																	</label>
+																</div>
+															</div>
+															<div className="col-8">
+																<div className="form-floating mb-3">
+																	<input
+																		type="text"
+																		className="form-control"
+																		id="address"
+																		placeholder=""
+																		value={formData.address}
+																		onChange={handleChange}
+																	/>
+																	<label htmlFor="address" className="mt-0">
+																		Address
+																	</label>
+																</div>
+															</div>
+														</div>
+														<span>Address Type</span>
+														<div className="d-flex mt-3">
+															<div className="form-check">
+																<input
+																	className="form-check-input"
+																	type="radio"
+																	name="flexRadioDefault"
+																	id="Home"
+																	value="Home"
+																	checked={formData.type === "Home"}
+																	onChange={handleRadioChange}
+																/>
+																<label className="form-check-label mt-0" htmlFor="Home">
+																	Home
+																</label>
+															</div>
+															<div className="form-check ms-2">
+																<input
+																	className="form-check-input"
+																	type="radio"
+																	name="flexRadioDefault"
+																	id="work"
+																	value="Work"
+																	checked={formData.type === "Work"}
+																	onChange={handleRadioChange}
+																/>
+																<label className="form-check-label mt-0" htmlFor="work">
+																	Work
+																</label>
+															</div>
+														</div>
+													</form>
+													<div className="form-footer">
+														<button
+															type="button"
+															className="save-button"
+															onClick={editAddress}
+														>
+															SAVE
+														</button>
+														<span onClick={() => setEditVisible(false)}>CANCEL</span>
+													</div>
+												</Dialog>
 												<button
 													type="button"
 													className="btn btn-danger"
@@ -287,6 +439,7 @@ export default function Address() {
 												>
 													Delete
 												</button>
+												
 											</div>
 										</div>
 									</div>
@@ -302,6 +455,8 @@ export default function Address() {
 					</div>
 				</div>
 			</div>
+			
+			<Footer />
 		</>
 	);
 }

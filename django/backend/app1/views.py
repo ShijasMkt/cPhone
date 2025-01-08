@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.response import Response
 from app1.models import user
@@ -6,6 +7,7 @@ from app1.models import Cart
 from app1.models import Address
 from .tools.send_email import send_email
 from .tools.otp import generate_otp
+from .tools.generate_invoice import generate_invoice
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -19,7 +21,6 @@ from django.contrib.auth.hashers import make_password,check_password
 
 def randomKey():
     
- 
 
     res = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k=11))
@@ -168,8 +169,8 @@ def saveAddress(request):
 
         new_address=Address(
                 user_id_id=user_id,
-                fname=formData['fName'],
-                lname=formData['lName'],
+                fname=formData['fname'],
+                lname=formData['lname'],
                 mobile=formData['mobile'],
                 pincode=formData['pincode'],
                 address=formData['address'],
@@ -179,15 +180,49 @@ def saveAddress(request):
         
         return Response(status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
 
+def editAddress(request):
+    if request.method=='POST':
+        formData=request.data.get('formData')
+        address_id=formData['id']
+        address=Address.objects.get(id=address_id)
+        if address:
+            address.fname=formData['fname']
+            address.lname=formData['lname']
+            address.mobile=formData['mobile']
+            address.pincode=formData['pincode']
+            address.address=formData['address']
+            address.type=formData['type']
+            address.save()
+            return Response(status=status.HTTP_200_OK) 
+
+        
+    
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def showAddress(request):
-        if request.method=='POST':
-            user_id=request.data.get('userID')
-            user_address=Address.objects.filter(user_id=user_id).all()
+    if request.method == 'POST':
+        user_id = request.data.get('userID')
+        
+        if not user_id:
+            return Response({"error": "userID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user_address = Address.objects.filter(user_id=user_id, deleted=False)
+            if not user_address.exists():
+                return Response({"message": "No addresses found for the given user."}, status=status.HTTP_404_NOT_FOUND)
+            
             serializer = AddressDataSerializer(user_address, many=True)
-        return Response(data=serializer.data,status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response({"error": "Invalid request method."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -195,45 +230,16 @@ def deleteAddress(request):
     if request.method=='POST':
         user_id=request.data.get('userID')
         address_id=request.data.get('addressID')
-        address=Address.objects.filter(user_id=user_id,id=address_id)
+        address=Address.objects.get(user_id=user_id,id=address_id)
         
         if address:
-            address.delete()
+            address.deleted=True
+            address.save()
             return Response(status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['POST'])
-@permission_classes([AllowAny])        
-def addProduct(request):
-    if request.method=='POST':
-        name=request.data.get('name')
-        price=request.data.get('price')
-        desc=request.data.get('desc')
-        img=request.FILES.get('img')
 
-        phone=Phones(
-            name=name,
-            price=price,
-            desc=desc,
-            img=img
-        )
-
-        phone.save()
-
-        return Response(status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-@permission_classes([AllowAny])        
-def deleteProduct(request):
-    if request.method=='POST':
-        item_id=request.data.get('itemID')       
-        item=Phones.objects.filter(id=item_id)
-        if item:
-            item.delete()
-            return Response(status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])        
@@ -314,7 +320,8 @@ def userDetails(request):
         user_data=user.objects.get(id=user_id)
         
         serializer=UserDataSerializer(user_data)
-        return(Response(data={'userData':serializer.data},status=status.HTTP_200_OK))     
+        return(Response(data={'userData':serializer.data},status=status.HTTP_200_OK))    
+     
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def editUserDetails(request):
@@ -344,8 +351,11 @@ def deleteUserAccount(request):
         data=request.data
         user_id=data.get('userID')
         user_data=user.objects.get(id=user_id)
-        user_data.delete()
-        return(Response(status=status.HTTP_200_OK))
+        if user_data:
+            user_data.deleted=True
+            user_data.save()
+            return(Response(status=status.HTTP_200_OK))
+        
     
 
 @api_view(['POST'])    
@@ -384,13 +394,17 @@ def fetchOrders(request):
     if request.method=='POST':
         data=request.data
         userID=data.get('userID')
-        
-        order_details = Orders.objects.select_related('address', 'item').filter(user_id_id=userID)
+
+        if userID==0:
+            order_details = Orders.objects.select_related('address', 'item').all()
+        else:    
+            order_details = Orders.objects.select_related('address', 'item').filter(user_id_id=userID)
         all_orders = []
                 
         if not order_details:
                 return Response({"error": "No order found for the given user."}, status=status.HTTP_404_NOT_FOUND)
         for order in order_details:
+            order.update_status()
             address_serializer = AddressDataSerializer(order.address)
             item_serializer = PhoneDataSerializer(order.item)
 
@@ -401,7 +415,107 @@ def fetchOrders(request):
             "address": address_serializer.data,
             "item": item_serializer.data,
             "orderID":order.id,
+            "status":order.status
             }
             all_orders.append(response_data)
 
         return Response(all_orders, status=status.HTTP_200_OK)
+    
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def manageInvoice(request):
+    if request.method == 'POST':
+        data = request.data
+        orderID = data.get('orderID')
+
+        if orderID:
+            res =  generate_invoice(orderID)
+            print(res)
+            res = {'res':res}
+            return HttpResponse(res)
+        else:
+            return HttpResponse("Order ID not provided", status=400)
+
+##dasboard###########################################################################
+@api_view(['GET'])
+@permission_classes([AllowAny]) 
+def overView(request):
+    if request.method=='GET':
+        order_count=Orders.objects.all().count() 
+        revenue = sum(order['total_price'] for order in Orders.objects.values('total_price')) or 0
+        user_count=user.objects.filter(deleted=False).count() 
+        product_count=Phones.objects.all().count() 
+        return_data={
+            'orderCount':order_count,
+            'userCount':user_count,
+            'totalRevenue':revenue,
+            'productCount':product_count
+        }
+        
+        return Response(status=status.HTTP_200_OK,data=return_data)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])        
+def addProduct(request):
+    if request.method=='POST':
+        name=request.data.get('name')
+        price=request.data.get('price')
+        desc=request.data.get('desc')
+        img=request.FILES.get('img')
+
+        phone=Phones(
+            name=name,
+            price=price,
+            desc=desc,
+            img=img
+        )
+
+        phone.save()
+
+        return Response(status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])        
+def deleteProduct(request):
+    if request.method=='POST':
+        item_id=request.data.get('itemID')       
+        item=Phones.objects.filter(id=item_id)
+        if item:
+            item.delete()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['POST'])
+@permission_classes([AllowAny])        
+def editProduct(request):
+    if request.method=='POST':
+        item_id=request.data.get('id')
+        new_data=request.data
+        new_name=new_data.get('name')
+        new_price=new_data.get('price')
+        new_desc=new_data.get('desc')
+        item=Phones.objects.get(id=item_id)
+        if item:
+            item.name=new_name
+            if new_price!='':
+                item.price=new_price
+            item.desc=new_desc
+            item.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny]) 
+def fetchUsers(request):
+    if request.method=='GET':
+        user_details=user.objects.filter(deleted=False)
+        users_data=UserDataSerializer(user_details,many=True)
+        return Response(status=status.HTTP_200_OK,data=users_data.data)
+
+       

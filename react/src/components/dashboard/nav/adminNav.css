@@ -1,0 +1,49 @@
+.navbar-top{
+    box-shadow: 0 3px 5px rgba(0,0,0,.02),0 0 2px rgba(0,0,0,.05),0 1px 4px rgba(0,0,0,.08);
+}
+
+.adminNav .navbar{
+    height: 70px;
+}
+
+.sidebar-body .p-menu{
+    width: 100%;
+    border: 0;
+}
+.sidebar-body .p-menu-list{
+    padding-left: 0px;
+}
+
+.sidebar-body .p-panelmenu-header-link{
+    text-decoration: none;
+}
+
+.sidebar-body .p-menuitem-link{
+    text-decoration: none;
+}
+
+
+.sidebar-body .p-submenu-list{
+    margin-bottom: 0px;
+}
+
+.sidebar-body .p-panelmenu-header-content{
+    background: white;
+}
+
+.p-sidebar-content button{
+   
+    border-radius: 5px;
+}
+
+.sidebar-body{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.p-sidebar-content{
+    display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

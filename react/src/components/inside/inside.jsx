@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import SecNav from "../secNav/secNav";
 import { useUser } from "../authentication/userContext";
 import { useWishlist } from "../wishlist/wishlistContext";
+import Footer from "../../footer/footer";
 
 export default function Inside() {
 	const { isUser } = useUser();
@@ -66,11 +67,14 @@ export default function Inside() {
 	};
 
 	const toBuyNowPage = (phone) => {
-		navigateTo("/buyNow", { state: { data: phone } });
+		phone.qty=1
+		var data = [phone]
+		navigateTo("/buyNow", { state: { data: data } });
 	};
 
 	const toViewPage = (phone) => {
-		navigateTo("/purchase", { state: { data: phone } });
+		var data=[phone]
+		navigateTo("/purchase", { state: { data: data } });
 	};
 
 	const toggleWishlist = (phoneID) => {
@@ -107,16 +111,17 @@ export default function Inside() {
 									{phones.map((phone) => (
 										<div
 											key={phone.id}
-											className="col-12 col-md-3 product-card"
+											className="col-3 product-card"
 										>
 											<div className="card p-2">
 												{isUser ? (
 													<span
 														item-data={phone.id}
-														className="material-symbols-outlined"
+														className={wishlistItems.some(item => item.id === phone.id) ? "material-symbols-rounded" : "material-symbols-outlined"}
 														onClick={() => toggleWishlist(phone.id)}
 														style={{
 															color:wishlistItems.some(item => item.id === phone.id) ? "red" : "black",
+															fontVariationSettings: "'FILL' 1",
 														}}
 													>
 														favorite
@@ -142,14 +147,14 @@ export default function Inside() {
 													<div className="card-btn">
 														<button
 															onClick={() => toBuyNowPage(phone)}
-															className="btn text-danger"
+															className="btn btn-success btn-sm"
 														>
 															Buy Now
 														</button>
 														<button
 															id={phone.id}
 															onClick={addItemToCart}
-															className="btn"
+															className="btn btn-warning btn-sm"
 														>
 															Add to cart
 														</button>
@@ -163,6 +168,7 @@ export default function Inside() {
 						</div>
 					</div>
 				</div>
+				<Footer />
 			</div>
 		</>
 	);

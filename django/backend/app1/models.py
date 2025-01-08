@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.timezone import now
+from datetime import timedelta
 
 # Create your models here.
 class user(models.Model):
@@ -6,6 +8,7 @@ class user(models.Model):
     email=models.CharField(max_length=30)
     password=models.CharField(max_length=30)
     user_img=models.ImageField(upload_to='upload/users',blank=True,null=True)
+    deleted=models.BooleanField(default=False)
 
 class Phones(models.Model):
     name=models.CharField(max_length=30)
@@ -31,6 +34,7 @@ class Address(models.Model):
     pincode=models.IntegerField()
     address=models.CharField(max_length=200)
     type=models.CharField(max_length=10)
+    deleted=models.BooleanField(default=False)
 
 class WishList(models.Model):
     user_id=models.ForeignKey(user,on_delete=models.CASCADE)
@@ -45,3 +49,12 @@ class Orders(models.Model):
     address=models.ForeignKey(Address,on_delete=models.CASCADE,blank=True,null=True) 
     payment_mode=models.CharField(max_length=20,blank=True,null=True)
     payment_id=models.IntegerField(blank=True,null=True)
+    status=models.CharField(max_length=20,default="Shipped")
+
+    def update_status(self):
+        
+        if now().date() >= self.date + timedelta(days=3):
+            self.status = "Delivered"
+            self.save()
+
+        

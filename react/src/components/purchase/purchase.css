@@ -1,9 +1,11 @@
 
 
 .purchase-body{
-    background-color: #9DC7C5 !important;
+    background-color: #f5f5f5 !important;
     min-height: 100vh;
     color: black;
+    display: flex;
+    align-items: center;
     
 }
 .phone-img{

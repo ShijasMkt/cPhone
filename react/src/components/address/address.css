@@ -11,7 +11,7 @@
 }
 
 .address-body{
-    background-color: #9DC7C5;
+    background-color: #f5f5f5;
     min-height: 100vh;
 }
 .add-address-form{
@@ -81,8 +81,9 @@
 }
 .card-button{
     display: flex;
-    justify-content: end;
-    align-items: baseline;
+    align-items: end;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .no-address{

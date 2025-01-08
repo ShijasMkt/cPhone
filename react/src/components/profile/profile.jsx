@@ -9,6 +9,7 @@ import { drawImageOnCanvas } from "../../utils";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { useUser } from "../authentication/userContext";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../footer/footer";
 
 export default function Profile() {
 	const navigateTo = useNavigate();
@@ -177,8 +178,10 @@ export default function Profile() {
 						title: "Updated!",
 						text: "Your username is updated",
 					});
+					
 				}
 				setNameEdit(false);
+				showDetails()
 			} else if (option === "img" && completedCrop) {
 				const blob = await getCroppedImageBlob();
 				if (!blob) {
@@ -244,6 +247,7 @@ export default function Profile() {
 	};
 
 	return (
+		<>
 		<div className="profile-body pt-top">
 			<SecNav />
 			<div className="container">
@@ -393,6 +397,9 @@ export default function Profile() {
 					</div>
 				</div>
 			</div>
+			
 		</div>
+		<Footer />
+		</>
 	);
 }

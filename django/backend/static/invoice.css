@@ -1,0 +1,77 @@
+
+
+  body {
+    background: rgb(204,204,204); 
+    
+  }
+  page {
+    position: relative;
+    background: white;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+  }  
+
+
+  page[size="A4"] {
+    height: 29.7cm;
+    width: 21cm; 
+  }
+
+  .page-padding{
+    padding: 20px;
+  }
+
+  .header-section{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    
+  }
+  .header-section span{
+    color: grey;
+  }
+
+  .body-section{
+    margin-top: 20px;
+  }
+
+  .body-section span{
+    font-size: 14px;
+  }
+
+  .item-section{
+    margin-top: 20px;
+  }
+
+table{
+    width: 100%;
+}
+
+thead tr{
+    border-bottom: 1px solid grey;
+}
+
+tbody td{
+    color: grey;
+    padding: 5px;
+    padding-left: 0px;
+}
+
+tfoot tr{
+    border-top: 1px solid grey;
+}
+
+.footer-section{
+    position: absolute;
+    bottom: 20px;
+}
+
+.date-section{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+

@@ -11,6 +11,10 @@ import swal from "sweetalert2";
 import Cart from "../cart/cart";
 import { useWishlist } from "../wishlist/wishlistContext";
 import Wishlist from "../wishlist/wishlist";
+import { InputText } from 'primereact/inputtext';
+import { Button } from "primereact/button";
+        
+        
 
 export default function SecNav() {
 	const [visibleMenu, setVisibleMenu] = useState(false);
@@ -19,14 +23,24 @@ export default function SecNav() {
 	const uName = Cookies.get("userName");
 	const navigateTo = useNavigate();
 	const { isUser } = useUser();
+	const {displayName}=useUser();
+    const [items, setItems] = useState([]);
 	const op = useRef(null);
 	const { wishlistItems, addToWishlist, deleteWishlistItem } = useWishlist();
 	const [userDetails,setUserDetails]=useState({});
+	useEffect(()=>{
+		fetchUserDetails();
+		fetchPhones();
+	},[])
 
-	useEffect(() => {
+	useEffect(()=>{
 		if(isUser){
 			fetchUserDetails();
 		}
+	},[isUser])
+
+	useEffect(() => {
+		
 		const handleOpenCartSidebar = () => {
 			setVisibleCart(true);
 		};
@@ -38,26 +52,66 @@ export default function SecNav() {
 		};
 	}, [wishlistItems]);
 
+	const fetchPhones = async () => {
+				const res = await fetch("http://127.0.0.1:8000/phones/", {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+				if (!res.ok) {
+					swal.fire({
+						icon: "error",
+						title: "Network Error",
+						text: "Please come back again",
+					});
+				}
+				const data = await res.json();
+				setItems(data);
+			};
+	const [searchValue, setSearchValue] = useState("");
+	const [searchList, setSearchList] = useState([]);
+	const [isResult, setResult] = useState(false);
+			const handleKeyPress = (event) => {
+				if (event.key === "Enter") {
+					document.getElementById("searchBox").blur();
+					document.getElementById("searchIcon").click();
+				}
+			};
+			const searchResult = () => {
+				const results = items.filter((item) =>
+					item.name.toLowerCase().includes(searchValue.toLowerCase())
+				);
+				if (results) {
+					setResult(true);
+				}
+				setSearchList(results);
+				navigateTo("/result", { state: { data: results ,search:searchValue} });
+			};
+
 	const fetchUserDetails = async () => {
 		const userID = Cookies.get('userID');
 		const body = JSON.stringify({ userID });
-
-		try {
-			const res = await fetch("http://127.0.0.1:8000/user_details/", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body,
-			});
-
-			const data = await res.json();
-			if (data.userData) {
-				setUserDetails(data.userData);
+		if(userID){
+			try {
+				const res = await fetch("http://127.0.0.1:8000/user_details/", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body,
+				});
+	
+				const data = await res.json();
+				if (data.userData) {
+					setUserDetails(data.userData);
+				}
+			} catch (error) {
+				console.error("Error fetching user details:", error);
 			}
-		} catch (error) {
-			console.error("Error fetching user details:", error);
 		}
+
+		
 	}
 
 	const handleLoginClick = () => {
@@ -97,6 +151,7 @@ export default function SecNav() {
 								<h2 className="mb-0">cPhone</h2>
 							</Link>
 						</div>
+						
 
 						<button
 							className="navbar-toggler"
@@ -116,6 +171,29 @@ export default function SecNav() {
 							style={{ flexGrow: "0.5", justifyContent: "end" }}
 						>
 							<ul className="navbar-nav gap-3 align-items-center">
+								<li className="nav-item">
+								<div
+									id="search-box"
+									className={"d-flex search-bar-box"}
+								>
+									<input
+										id="searchBox"
+										value={searchValue}
+										className="search-bar"
+										type="search"
+										placeholder="Search our products..."
+										onChange={(e) => setSearchValue(e.target.value)}
+										onKeyDown={handleKeyPress}
+									/>
+									<span
+										id="searchIcon"
+										onClick={searchResult}
+										className="material-symbols-outlined search-bar-icon"
+									>
+										search
+									</span>
+								</div>
+								</li>
 								<div className="profile-area">
 									{isUser ? (
 										<>
@@ -124,7 +202,7 @@ export default function SecNav() {
 													<span className="material-symbols-outlined">
 														account_circle
 													</span>
-													<h5>{uName}</h5>
+													<h5>{userDetails.name}</h5>
 												</div>
 											</li>
 										</>
@@ -135,6 +213,7 @@ export default function SecNav() {
 													Login/Register
 												</Link>
 											</li>
+											
 										</>
 									)}
 								</div>
@@ -182,7 +261,7 @@ export default function SecNav() {
 			>
 				<div className="menu-box">
 					<div className="menu-header">
-						<h2 className="mb-0">Hello, {uName}</h2>
+						<h2 className="mb-0">Hello, {userDetails.name}</h2>
 						<div>{userDetails.user_img && (<img
 							src={`http://127.0.0.1:8000${userDetails.user_img}`}
 							alt=""

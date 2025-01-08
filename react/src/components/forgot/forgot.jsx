@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { InputOtp } from "primereact/inputotp";
-import "primereact/resources/themes/lara-light-cyan/theme.css";
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";

@@ -10,7 +10,8 @@ export default function Wishlist() {
     const { wishlistItems, deleteWishlistItem } = useWishlist();
 
     const toViewPage = (phone) => {
-		navigateTo("/purchase", { state: { data: phone } });
+        var data=[phone]
+		navigateTo("/purchase", { state: { data: data } });
 	};
 
     const showWishlist = (e) => {

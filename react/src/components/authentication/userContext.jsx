@@ -11,10 +11,11 @@ export const UserProvider = ({ children }) => {
             const userKey = Cookies.get('userKey');
             setIsUser(userKey ? true : false);
         };
-
+        
         checkUser();
             
     }, []);
+
     
     const logoutFunc = () => {
         if (Cookies.get("userKey")) {

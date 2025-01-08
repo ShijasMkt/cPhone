@@ -5,6 +5,7 @@ import { useLocation,useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import swal from "sweetalert2";
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import Footer from "../../footer/footer";
         
         
         
@@ -13,7 +14,7 @@ export default function BuyNow() {
 	
 	const navigateTo=useNavigate();
 	const location = useLocation();
-	const { data } = location.state || {};
+	const { data } = location.state || [];
 	const userID = Cookies.get("userID");
 	const [addressList, setAddressList] = useState([]);
 	const [totalPrice, setTotalPrice] = useState(0);
@@ -23,10 +24,20 @@ export default function BuyNow() {
 		addressId: "",
 		itemId:"",
 	});
-	const [qty,setQty]=useState(1);
+
+	const [itemDetails,setItemDetails]=useState([{
+		desc: "",
+		id: 0,
+		img: "",
+		name: "",
+		price: 0,
+		qty: 1,
+	}])
 	const [selectedPaymentOption, setSelectedPaymentOption] = useState(null);
 	const { addressId,itemId } = purchaseInfo;
 	const [captchaInput,setCaptchaInput]=useState("");
+	const [totalItem,setTotalItem]=useState(0)
+	const [packCharge,setPackCharge]=useState(0)
 
 	function getDate() {
 		const today = new Date();
@@ -35,17 +46,54 @@ export default function BuyNow() {
 		const date = String(today.getDate()).padStart(2, "0");
 		return `${year}-${month}-${date}`;
 	}
+
+
+	useEffect(() => {
+		  setItemDetails(data); 
+	  }, []);
+
+	  useEffect(()=>{
+		setSummary();
+	  },[itemDetails])
+	
+	  const setSummary = () => {
+		const summary = itemDetails.reduce(
+			(acc, item) => {
+				acc.totalItems += item.qty;
+				acc.totalPrice += item.price * item.qty;
+				return acc;
+			},
+			{ totalItems: 0, totalPrice: 0 }
+		);
+		setPackCharge(29*itemDetails.length)
+		setTotalItem(summary.totalItems);
+		setTotalPrice(summary.totalPrice);
+	};
+
+	const changeQty = (e, index) => {
+
+        const { value } = e.target;
+        setItemDetails((prevDetails) =>
+
+            prevDetails.map((item, idx) =>
+
+                idx === index ? { ...item, qty: parseInt(value) } : item
+
+            )
+
+        );
+    };
 	
 
 	useEffect(() => {
-
+		
 		if(selectedPaymentOption==='cod'){
 			loadCaptchaEnginge(6,'white','blue');
 		}
 		if (data.count) {
 			setItemCount(data.count);
 		}
-		setTotalPrice(data.price*qty + 29);
+
 		const userAddress = async () => {
 			const body = JSON.stringify({ userID });
 			const res = await fetch("http://127.0.0.1:8000/show_address/", {
@@ -66,7 +114,9 @@ export default function BuyNow() {
 			setAddressList(data);
 		};
 		userAddress();
-	}, [qty,selectedPaymentOption]);
+	}, [selectedPaymentOption]);
+
+	
 
 	const deliverySelected = (address) => {
 		setPurchaseInfo((prevInfo) => ({
@@ -82,6 +132,7 @@ export default function BuyNow() {
 			addressId: "",
 		}));
 		setAddressSelected(false);
+		setSelectedPaymentOption(null)
 	};
 
 	const itemSelected=(item)=>{
@@ -98,6 +149,7 @@ export default function BuyNow() {
 			itemId:""
 		}))
 		setItemSelected(false);
+		setSelectedPaymentOption(null);
 	}
 
   const handlePaymentOption = (option) => {
@@ -130,39 +182,49 @@ export default function BuyNow() {
 
   const placeOrder=async()=>{
 	const date=getDate();
+	let allSuccessful = true;
+	for(const item of itemDetails){
+		const orderData=new FormData();
+		orderData.append("userID",userID);
+		orderData.append("itemID",item.id);
+		orderData.append("date",date);
+		orderData.append("totalPrice",item.price*item.qty+29);
+		orderData.append("qty",item.qty);
+		orderData.append("addressID",addressId);
+		orderData.append("paymentMode",selectedPaymentOption);
+		orderData.append("paymentID",null);
 
-	const orderData=new FormData();
-	orderData.append("userID",userID);
-	orderData.append("itemID",itemId);
-	orderData.append("date",date);
-	orderData.append("totalPrice",totalPrice);
-	orderData.append("qty",qty);
-	orderData.append("addressID",addressId);
-	orderData.append("paymentMode",selectedPaymentOption);
-	orderData.append("paymentID",null);
-
-	const res = await fetch("http://127.0.0.1:8000/place_order/", {
-		method: "POST",
-		body: orderData,
-	});
-	if (!res.ok) {
-		swal.fire({
-			icon: "error",
-			title: "Network Error",
-			text: "Please come back again",
+		const res = await fetch("http://127.0.0.1:8000/place_order/", {
+			method: "POST",
+			body: orderData,
 		});
+		if (!res.ok) {
+			allSuccessful=false
+			swal.fire({
+				icon: "error",
+				title: "Network Error",
+				text: "Please come back again",
+			});
+			break;
+		}
 	}
-	else{
-		swal.fire({
-			icon: "success",
-			title: "Order Placed!",
-			text: "Your Order Placed Successfully",
-		})
-		.then(
-			navigateTo("/orders")
-		)
+		if(allSuccessful){
+			swal.fire({
+				icon: "success",
+				title: "Order Placed!",
+				text: "Your Order Placed Successfully",
+			})
+			.then(
+				navigateTo("/orders")
+			)
+		}
 	}
-  }
+	
+
+	
+  
+
+  
 	return (
 		<>
 			<SecNav />
@@ -258,28 +320,35 @@ export default function BuyNow() {
 										<h5 className="mb-0">ORDER SUMMARY</h5>
 									</div>
 									<div className="info-body">
-										<div className="item-box">
+										
+											{itemDetails.map((item,index)=>(
+											<div className="item-box" key={item.id}>
 											<div className="row">
 												<div className="col-2 d-flex justify-content-center">
 												<img
-												src={`http://127.0.0.1:8000${data.img}`}
+												src={`http://127.0.0.1:8000${item.img}`}
 												alt=""
 												width={60}
 												/>
 												</div>
 												<div className="col-10">
 													<div className="item-info">
-													<h5>{data.name}</h5>
-													<span className="text-theme-2">{data.desc}</span> 
+													<h5>{item.name}</h5>
+													<span className="text-theme-2">{item.desc.split('\n')[0]}</span> 
 													<div className="d-flex align-items-center gap-2 mt-2">	
-													<h6 className="mb-0">₹{data.price*qty}</h6>
-														<div>Qty: <input type="number" value={qty} step={1} onChange={(e)=>setQty(e.target.value)} onKeyDown={(e) => { if (e.key === '.') e.preventDefault(); }} min={1} max={5}/></div>
+													<h6 className="mb-0">₹{item.price}</h6>
+													<div>Qty: <input  type="number" value={item.qty} step={1} onChange={(e)=>changeQty(e,index)} onKeyDown={(e) => { if (e.key === '.') e.preventDefault(); }} min={1} max={5}/></div>
+														
 													</div>
 													</div>
 												</div>
 											</div>
 											
 										</div>
+										))}
+										
+										
+										
 										<div className="button-box">
 											<button className="continue-btn" onClick={()=>itemSelected(data)}>CONTINUE</button>
 										</div>
@@ -378,10 +447,10 @@ export default function BuyNow() {
 								<div className="summary-body">
 									<div className="summary-item">
 										<span>
-											Price({qty} {qty > 1 ? <>items</> : <>item</>}
+											Price({totalItem} {totalItem > 1 ? <>items</> : <>item</>}
 											)
 										</span>
-										<span>₹{data.price*qty}</span>
+										<span>₹{totalPrice}</span>
 									</div>
 									<div className="summary-item">
 										<span>Delivery Charges</span>
@@ -395,14 +464,14 @@ export default function BuyNow() {
 									</div>
 									<div className="summary-item">
 										<span>Packaging Charge</span>
-										<span>₹29</span>
+										<span>₹{packCharge}</span>
 									</div>
 
-									<hr className="mt-2" />
+									<hr className="mt-2 mb-0" />
 									<b>
 										<div className="summary-item">
 											<span>Total Payable</span>
-											<span>₹{totalPrice}</span>
+											<span>₹{totalPrice+packCharge}</span>
 										</div>
 									</b>
 								</div>
@@ -411,6 +480,7 @@ export default function BuyNow() {
 					</div>
 				</div>
 			</div>
+			<Footer />
 		</>
 	);
 }
